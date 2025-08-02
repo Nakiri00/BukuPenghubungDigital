@@ -27,6 +27,14 @@ RUN composer install --no-dev --optimize-autoloader --verbose
 # Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
+# **Set DocumentRoot ke public/**
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf
+
+# Tambah konfigurasi AllowOverride
+RUN echo "<Directory /var/www/html/public>\n\
+    AllowOverride All\n\
+</Directory>" >> /etc/apache2/apache2.conf
+
 EXPOSE 80
 
 CMD ["apache2-foreground"]

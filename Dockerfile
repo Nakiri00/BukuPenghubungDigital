@@ -1,29 +1,30 @@
 FROM php:8.2-apache
 
-# Install dependencies
+# Update dan install dependencies
 RUN apt-get update && apt-get install -y \
     libzip-dev unzip git && \
+    docker-php-ext-configure zip && \
     docker-php-ext-install pdo_mysql zip bcmath mbstring exif
 
-# Enable Apache rewrite
+# Aktifkan mod_rewrite Apache
 RUN a2enmod rewrite
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy composer binary
+# Copy Composer dari image resmi
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy project files
+# Copy semua file Laravel
 COPY . .
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install dependencies Laravel
+RUN composer install --no-dev --optimize-autoloader --verbose
 
-# Set permissions
+# Set permission untuk storage & cache
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Expose port
+# Expose port 80
 EXPOSE 80
 
 CMD ["apache2-foreground"]

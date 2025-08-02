@@ -1,8 +1,8 @@
 FROM php:8.2-apache
 
-# Update & install dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    libzip-dev unzip git zlib1g-dev && \
+    libzip-dev unzip git zlib1g-dev libonig-dev && \
     docker-php-ext-configure zip && \
     docker-php-ext-install pdo_mysql zip bcmath mbstring exif
 
@@ -21,10 +21,9 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --verbose
 
-# Set permissions for storage & cache
+# Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Expose port
 EXPOSE 80
 
 CMD ["apache2-foreground"]

@@ -2,8 +2,8 @@ FROM php:8.2-apache
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
-    libzip-dev unzip git curl && \
-    docker-php-ext-install pdo_mysql zip bcmath
+    libzip-dev unzip git && \
+    docker-php-ext-install pdo_mysql zip bcmath mbstring exif
 
 # Enable Apache rewrite
 RUN a2enmod rewrite

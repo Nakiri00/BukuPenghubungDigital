@@ -29,8 +29,7 @@ RUN composer install --no-dev --optimize-autoloader --verbose
 # Clear cache
 RUN php artisan config:clear && \
     php artisan cache:clear && \
-    php artisan route:clear && \
-    php artisan view:clear
+    php artisan route:clear
 
 # Set DocumentRoot ke public/
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf

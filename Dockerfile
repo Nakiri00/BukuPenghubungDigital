@@ -18,16 +18,21 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Copy project files
 COPY . .
 
-# Buat folder cache kalau belum ada & kasih permission
-RUN mkdir -p bootstrap/cache && chmod -R 777 bootstrap/cache storage
+# Buat folder cache & set permission
+RUN mkdir -p bootstrap/cache && mkdir -p storage && \
+    chown -R www-data:www-data storage bootstrap/cache && \
+    chmod -R 775 storage bootstrap/cache
 
-# Install PHP dependencies
+# Install dependencies
 RUN composer install --no-dev --optimize-autoloader --verbose
 
-# Set permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Clear cache
+RUN php artisan config:clear && \
+    php artisan cache:clear && \
+    php artisan route:clear && \
+    php artisan view:clear
 
-# **Set DocumentRoot ke public/**
+# Set DocumentRoot ke public/
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf
 
 # Tambah konfigurasi AllowOverride

@@ -1,0 +1,9 @@
+* text=auto
+*.php linguist-language=PHP
+*.blade.php linguist-language=Blade
+*.js linguist-language=JavaScript
+/vendor/* linguist-vendored
+/node_modules/* linguist-vendored
+/public/* linguist-vendored
+/storage/* linguist-vendored
+CHANGELOG.md export-ignore

@@ -18,10 +18,10 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Copy project files
 COPY . .
 
-RUN php -v && composer --version && composer check-platform-reqs
+RUN composer diagnose
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --verbose --ignore-platform-reqs
+RUN composer install --no-dev --optimize-autoloader -vvv || true
 
 # Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache

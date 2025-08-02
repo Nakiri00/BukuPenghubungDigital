@@ -18,6 +18,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Copy project files
 COPY . .
 
+# Buat folder cache kalau belum ada & kasih permission
+RUN mkdir -p bootstrap/cache && chmod -R 777 bootstrap/cache storage
+
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --verbose
 

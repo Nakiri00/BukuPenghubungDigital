@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\DB;
 
 class StudentSeeder extends Seeder {
     public function run(): void {
-        DB::table('students')->truncate();
+        DB::table('students')->delete();
         DB::table('students')->insert([
             ['id' => 21, 'parent_id' => 65, 'parent_name' => 'Orang Tua 1', 'nisn' => '1234', 'name' => 'Budi Santoso', 'dob' => '2019-01-03', 'gender' => 'Laki-Laki', 'nationality' => 'WNI', 'religion' => 'Islam', 'address' => 'Jalan DEFG', 'grade_id' => 2, 'status' => 1],
             ['id' => 22, 'parent_id' => 66, 'parent_name' => 'Orang Tua 2', 'nisn' => '12345', 'name' => 'Kevin', 'dob' => '2020-06-03', 'gender' => 'Laki-Laki', 'nationality' => 'WNI', 'religion' => 'Islam', 'address' => 'Jalan EFG', 'grade_id' => 2, 'status' => 1],

@@ -10,7 +10,7 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
-    {
+    {   
         $this->call([
             UserTypeSeeder::class,
             UserSeeder::class,
@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
             GradeTeacherSeeder::class,
             StudentCommentSeeder::class,
         ]);
+
     }
 }

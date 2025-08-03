@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\DB;
 
 class GradeSeeder extends Seeder {
     public function run(): void {
-        DB::table('grades')->truncate(); 
+        DB::table('grades')->delete();
         DB::table('grades')->insert([
             ['id' => 1, 'grade' => '1'],
             ['id' => 2, 'grade' => '2'],

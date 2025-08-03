@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder {
     public function run(): void {
-        DB::table('users')->truncate();
+        DB::table('users')->delete();
         DB::table('users')->insert([
             ['id' => 1, 'name' => 'admin', 'email' => 'admin@gmail.com', 'password' => '$2y$10$G7eReTrOaZgHG2dj12JYweE6FohU80R8pXLrrsGb6xn3xjQspP.xm', 'user_type_id' => 100],
             ['id' => 62, 'name' => 'Guru Kelas 2', 'email' => '123@sekolah.com', 'password' => '$2y$10$.gy9gWaaqDfJyPLS5Ez06uPUB.MIa4DbAzJLDkbAg511sijMKJkGK', 'user_type_id' => 2],

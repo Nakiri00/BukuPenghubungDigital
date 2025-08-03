@@ -41,7 +41,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('teacher', TeacherController::class);
     Route::get('/teacher_page/students_comment_form', [StudentsCommentController::class, 'create'])->name('students_comment.create');
     Route::post('/teacher_page/students_comment_form', [StudentsCommentController::class, 'store'])->name('students_comment.store');
-
+    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('user.editProfile');
+    Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('user.updateProfile');
+    Route::get('/teacher/profile/edit', [TeacherController::class, 'edit'])->name('teacher.profile.edit');
+    Route::put('/teacher/profile/update', [TeacherController::class, 'updateProfile'])->name('teacher.profile.update');
+    Route::get('/admin/profile/edit', [UserController::class, 'edit'])->name('admin.profile.edit');
+    Route::put('/admin/profile/update', [UserController::class, 'update'])->name('admin.profile.update');
+    Route::get('/admin/teacher/{id}/edit', [TeacherController::class, 'editProfile'])->name('users.teacher.edit');
+    Route::put('/admin/teacher/{id}', [TeacherController::class, 'update'])->name('users.teacher.update');
+    Route::delete('/teachers/{id}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
 
 
     Route::resource('student_result', StudentResultController::class);

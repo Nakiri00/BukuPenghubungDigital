@@ -45,10 +45,7 @@
                             </td>
                             <td>{{ $teacher->subject ?? '-' }}</td>
                             <td>
-                                <a href="{{ route('teacher.show', $teacher->id) }}" class="btn btn-info btn-sm">
-                                    <i class="fa fa-eye"></i>
-                                </a>
-                                <a href="{{ route('teacher.edit', $teacher->id) }}" class="btn btn-warning btn-sm">
+                                <a href="{{ route('users.teacher.edit', $teacher->id) }}" class="btn btn-warning btn-sm">
                                     <i class="fa fa-edit"></i>
                                 </a>
                                 <form action="{{ route('teacher.destroy', $teacher->id) }}" id="delete-form-{{ $teacher->id }}"

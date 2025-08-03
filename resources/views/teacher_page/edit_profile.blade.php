@@ -1,10 +1,10 @@
-@extends('backend.app')
+@extends('teacher_page.app')
 
 @section('content')
 <div class="col-md-8 mx-auto">
     <div class="card">
         <div class="card-header">
-            <h2>Edit Profil Admin</h2>
+            <h2>Edit Profil Guru</h2>
         </div>
         <div class="card-body">
             @if (session('success'))
@@ -21,9 +21,19 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.profile.update') }}" method="POST">
+            <form action="{{ route('teacher.profile.update') }}" method="POST">
                 @csrf
                 @method('PUT')
+
+               <div class="form-group">
+                    <label for="nip">NIP</label>
+                    <input type="text" name="nip" id="nip" 
+                        class="form-control {{ $errors->has('nip') ? 'is-invalid' : '' }}"
+                        value="{{ old('nip', $user->teacher->nip ?? '') }}">
+                    @if ($errors->has('nip'))
+                        <span class="invalid-feedback">{{ $errors->first('nip') }}</span>
+                    @endif
+                </div>
 
                 <div class="form-group">
                     <label for="name">Nama Lengkap</label>
@@ -46,7 +56,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Password Baru <small>(Kosongkan jika tidak diubah)</small></label>
+                    <label for="address">Alamat</label>
+                    <input type="text" name="address" id="address" 
+                        class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}"
+                        value="{{ old('address', $user->teacher->address ?? '') }}">
+                    @if ($errors->has('address'))
+                        <span class="invalid-feedback">{{ $errors->first('address') }}</span>
+                    @endif
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password Baru <small>(kosongkan jika tidak ingin diubah)</small></label>
                     <input type="password" name="password" id="password" 
                            class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}">
                     @if ($errors->has('password'))

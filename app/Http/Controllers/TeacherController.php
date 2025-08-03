@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use App\Models\Grade;
+use Illuminate\Support\Facades\Auth;
 
 
 class TeacherController extends Controller
@@ -105,49 +106,98 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit()
     {
-        //
+        $user = Auth::user();
+        $teacher = Teacher::where('user_id', $user->id)->first();
+
+        return view('teacher_page.edit_profile', compact('user', 'teacher'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function updateProfile(Request $request)
     {
-        $teacher = Teacher::findOrFail($id);
+        $user = Auth::user()->load('teacher'); 
+        $teacher = Teacher::where('user_id', $user->id)->first();
 
-        $validated = $request->validate([
-            'nip'          => 'required|string|max:18|unique:teachers,nip,' . $teacher->id,
-            'name'         => 'required|string|max:50',
-            'teacher_type' => 'required|in:wali_kelas,mapel',
-            'dob'          => 'required|date',
-            'gender'       => 'required|in:Laki-Laki,Perempuan',
-            'subject'      => 'nullable|string|max:50',
-            'address'      => 'required|string|max:255',
-            'phone'        => 'required|string|max:15',
-            'grade_id'     => 'nullable|required_if:teacher_type,wali_kelas|exists:grades,id'
+        $request->validate([
+            'nip' => 'required|string|max:50|unique:teachers,nip,' . $teacher->id,
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'address' => 'required|string|max:255',
+            'password' => 'nullable|string|confirmed|min:8',
         ]);
 
-        if ($validated['teacher_type'] === 'wali_kelas') {
-            $validated['subject'] = 'Mengajar semua pelajaran umum';
+        // Update data di tabel users
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
         }
+        $user->save();
 
-        $teacher->update($validated);
+        // Update data di tabel teachers
+        $teacher->nip = $request->nip;
+        $teacher->name = $request->name; // Sync name dengan user name
+        $teacher->address = $request->address;
+        $teacher->save();
 
-        if ($teacher->user) {
-            $teacher->user->update(['name' => $validated['name']]);
-        }
-
-        Session::flash('success', 'Guru berhasil diupdate.');
-        return redirect()->route('teacher.index');
+        return redirect()->route('teacher.profile.edit')->with('success', 'Profil berhasil diperbarui.');
     }
 
+    public function editProfile($id)
+    {
+        $teacher = Teacher::findOrFail($id);
+        $grades = Grade::all(); // Untuk dropdown kelas (grade)
+        return view('users.edit_teachers', compact('teacher', 'grades'));
+    }
 
+    public function update(Request $request, $id)
+    {
+       $teacher = Teacher::findOrFail($id);
+
+    // Validasi umum
+    $rules = [
+        'nip' => 'required|string|max:50|unique:teachers,nip,' . $teacher->id,
+        'name' => 'required|string|max:255',
+        'teacher_type' => 'required|in:wali_kelas,mapel',
+    ];
+
+    if ($request->teacher_type == 'wali_kelas') {
+        $rules['grade_id'] = 'required|exists:grades,id';
+    } else {
+        $rules['mapel_grades'] = 'required|array|min:1';
+        $rules['mapel_grades.*'] = 'exists:grades,id';
+        $rules['subject'] = 'required|string|max:255';
+    }
+
+    $validated = $request->validate($rules);
+
+    // Update Teacher Data
+    $teacher->nip = $validated['nip'];
+    $teacher->name = $validated['name'];
+    $teacher->teacher_type = $validated['teacher_type'];
+
+    if ($validated['teacher_type'] == 'wali_kelas') {
+        $teacher->grade_id = $validated['grade_id'];
+        $teacher->subject = 'Mengajar semua pelajaran umum';
+        $teacher->grades()->detach();
+    } else {
+        $teacher->grade_id = null;
+        $teacher->subject = $validated['subject'];
+        $teacher->grades()->sync($validated['mapel_grades']);
+    }
+
+    $teacher->save();
+
+    // Update User Name (users table)
+    if ($teacher->user_id) {
+        $user = $teacher->user;
+        $user->name = $validated['name'];
+        $user->save();
+    }
+
+    return redirect()->route('users.teachers_data')->with('success', 'Data guru berhasil diperbarui.');
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -156,6 +206,24 @@ class TeacherController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $teacher = Teacher::findOrFail($id);
+
+        // Hapus relasi kelas mapel jika ada (pivot table)
+        if ($teacher->teacher_type === 'mapel') {
+            $teacher->grades()->detach();
+        }
+
+        // Hapus data user terkait
+        if ($teacher->user_id) {
+            $user = User::find($teacher->user_id);
+            if ($user) {
+                $user->delete();
+            }
+        }
+
+        // Hapus data guru
+        $teacher->delete();
+
+        return redirect()->route('users.teachers_data')->with('success', 'Data guru & user berhasil dihapus.');
     }
 }

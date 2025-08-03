@@ -1,13 +1,5 @@
 @extends('backend.app')
 
-@section('breadcrumb')
-<h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-<ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="./">Home</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-</ol>
-@endsection
-
 @section('content')
 <div class="col-md-12">
     <div class="card text-left col-md-12">
@@ -23,6 +15,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>NISN</th>
                             <th>Nama Lengkap</th>
                             <th>Kelas</th>
                             <th width="5%">Hapus</th>
@@ -32,6 +25,7 @@
                         @forelse ($users as $user)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            <td>{{ $user->nisn }}</td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->grade_id }}</td>
                             <td>
@@ -52,7 +46,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4" class="text-center">No Data Available</td>
+                            <td colspan="5" class="text-center">No Data Available</td>
                         </tr>
                         @endforelse
                     </tbody>

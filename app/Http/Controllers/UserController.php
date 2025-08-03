@@ -6,7 +6,8 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     /**
@@ -79,21 +80,60 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function editProfile()
     {
-        //
+        $user = Auth::user();
+        return view('familly_page.edit_profile', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function updateProfile(Request $request)
     {
-        //
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|confirmed|min:8',
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('user.editProfile')->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    public function edit()
+    {
+        $user = Auth::user();
+        return view('users.edit', compact('user'));
+    }
+
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|confirmed|min:8',
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('admin.profile.edit')->with('success', 'Profil berhasil diperbarui.');
     }
 
     /**

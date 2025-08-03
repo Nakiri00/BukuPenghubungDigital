@@ -1,10 +1,10 @@
-@extends('backend.app')
+@extends('familly_page.app')
 
 @section('content')
 <div class="col-md-8 mx-auto">
     <div class="card">
         <div class="card-header">
-            <h2>Edit Profil Admin</h2>
+            <h2>Edit Profil</h2>
         </div>
         <div class="card-body">
             @if (session('success'))
@@ -21,7 +21,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.profile.update') }}" method="POST">
+            <form action="{{ route('user.updateProfile') }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Password Baru <small>(Kosongkan jika tidak diubah)</small></label>
+                    <label for="password">Password Baru <small>(kosongkan jika tidak ingin diubah)</small></label>
                     <input type="password" name="password" id="password" 
                            class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}">
                     @if ($errors->has('password'))

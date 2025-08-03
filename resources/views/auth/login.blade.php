@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Masuk ParentLoop')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">

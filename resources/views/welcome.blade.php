@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Penghubung Digital</title>
+    <title>ParentLoop</title>
     <meta content="" name="description">
 
     <meta content="" name="keywords">
@@ -45,7 +45,7 @@
 
             <a href="#hero" class="logo d-flex align-items-center">
                 <img src="assets/img/logo.png" alt="">
-                <span>Buku Penghubung Digital</span>
+                <span>ParentLoop</span>
             </a>
 
             <nav id="navbar" class="navbar">
@@ -143,7 +143,7 @@
                     <div class="col-lg-5 col-md-12 footer-info">
                         <a href="#hero" class="logo d-flex align-items-center">
                             <img src="assets/img/logo.png" alt="">
-                            <span>Buku Penghubung digital</span>
+                            <span>ParentLoop</span>
                         </a>
                         <p>Memberikan informasi mengenai kegiatan, perkembangan, dan tanggung jawab murid</p>
                         <div class="social-links mt-3">

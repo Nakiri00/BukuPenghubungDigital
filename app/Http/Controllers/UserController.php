@@ -31,10 +31,28 @@ class UserController extends Controller
         return view('users.create')->with('users',$users);
     }
 
-    public function register()
+    public function register(Request $request)
     {
-        $users = User::all();
-        return view('users.register')->with('users',$users);
+         // Validasi
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Simpan user baru
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'user_type_id' => 4 // untuk orang tua
+        ]);
+
+        // Jangan login otomatis
+        // Auth::login($user); <-- hapus / jangan dipakai
+
+        // Redirect ke login
+        return redirect()->route('login')->with('status', 'Registrasi berhasil! Silakan login.');
     }
 
 

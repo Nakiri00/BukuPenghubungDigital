@@ -50,6 +50,16 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Auth::routes();
+// Matikan register bawaan Laravel
+Auth::routes(['register' => false]);
+
+// Custom Register
+Route::get('/register', function () {
+    return view('auth.register'); // form register
+})->name('register');
+
+Route::post('/register', [UserController::class, 'register'])->name('register.submit');
+
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

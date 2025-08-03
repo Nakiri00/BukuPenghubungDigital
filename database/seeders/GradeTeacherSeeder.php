@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 
 class GradeTeacherSeeder extends Seeder {
     public function run(): void {
+        DB::table('grade_teacher')->truncate(); 
         DB::table('grade_teacher')->insert([
             ['id' => 28, 'teacher_id' => 24, 'grade_id' => 2],
             ['id' => 29, 'teacher_id' => 24, 'grade_id' => 3],
